@@ -1,7 +1,7 @@
 <template>
-  <HelloWorld />
+  <Table />
 </template>
 
 <script lang="ts" setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+  import Table from '@/components/Table.vue'
 </script>
