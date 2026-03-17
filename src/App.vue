@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <v-app-bar title="App bar" />
+    <v-app-bar>
+      <template #prepend>
+        <v-app-bar-nav-icon />
+      </template>
+      <v-app-bar-title>Estudo NPI 2026.1</v-app-bar-title>
+    </v-app-bar>
 
     <v-main>
       <RouterView />

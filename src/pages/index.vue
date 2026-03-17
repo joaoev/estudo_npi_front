@@ -1,7 +1,9 @@
 <template>
-  <Table />
+  <v-container class="py-6" fluid>
+    <Table />
+  </v-container>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
   import Table from '@/components/Table.vue'
 </script>
