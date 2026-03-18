@@ -1,9 +1,7 @@
 <template>
-  <v-container class="py-6" fluid>
-    <Table />
-  </v-container>
+  <CatalogCrudView />
 </template>
 
 <script setup lang="ts">
-  import Table from '@/components/Table.vue'
+  import CatalogCrudView from '@/components/catalog/CatalogCrudView.vue'
 </script>
