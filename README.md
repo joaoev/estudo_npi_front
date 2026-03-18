@@ -2,6 +2,10 @@
 
 Um projeto simples para aprender conceitos fundamentais do **Vue 3** e **Vuetify**, incluindo integração com API REST, gerenciamento de estado e componentes reutilizáveis.
 
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?logo=vuedotjs&logoColor=%234FC08D)
+[![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?logo=vuetify&logoColor=fff)](#)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?logo=vite&logoColor=white)
+
 ## 📖 Sobre o Projeto
 
 Este é um projeto educacional que demonstra:
