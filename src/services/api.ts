@@ -33,7 +33,6 @@ export type CreateCategoriaPayload = {
   nomeCategoria: string
 }
 
-// ============ Serviço de Produtos ============
 export const produtoService = {
   async listar () {
     const response = await client.get<ApiProduto[]>('/produtos')
@@ -55,7 +54,6 @@ export const produtoService = {
   },
 }
 
-// ============ Serviço de Categorias ============
 export const categoriaService = {
   async listar () {
     const response = await client.get<ApiCategoria[]>('/categorias')
