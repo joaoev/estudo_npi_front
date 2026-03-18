@@ -19,7 +19,6 @@ export type Product = {
   nome: string
   descricao: string
   preco: number
-  estoque: number
   categoriaId: number
   ativo: boolean
   criadoEm: string
@@ -35,7 +34,6 @@ export type ProductPayload = {
   nome: string
   descricao: string
   preco: number
-  estoque: number
   categoriaId: number
   ativo: boolean
 }

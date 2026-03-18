@@ -29,7 +29,7 @@
                 />
               </v-col>
               <v-col class="d-flex justify-md-end" cols="12" md="6">
-                <v-btn color="" prepend-icon="mdi-plus" @click="openCreateProduct">
+                <v-btn color="success" prepend-icon="mdi-plus" @click="openCreateProduct">
                   Novo produto
                 </v-btn>
               </v-col>
@@ -56,7 +56,13 @@
               </template>
 
               <template #item.acoes="{ item }">
-                <v-btn icon="mdi-pencil" size="small" variant="text" @click="openEditProduct(item)" />
+                <v-btn
+                  color="warning"
+                  icon="mdi-pencil"
+                  size="small"
+                  variant="text"
+                  @click="openEditProduct(item)"
+                />
                 <v-btn
                   color="error"
                   icon="mdi-delete"
@@ -84,7 +90,7 @@
                 />
               </v-col>
               <v-col class="d-flex justify-md-end" cols="12" md="6">
-                <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreateCategory">
+                <v-btn color="info" prepend-icon="mdi-plus" @click="openCreateCategory">
                   Nova categoria
                 </v-btn>
               </v-col>
@@ -103,7 +109,13 @@
               </template>
 
               <template #item.acoes="{ item }">
-                <v-btn icon="mdi-pencil" size="small" variant="text" @click="openEditCategory(item)" />
+                <v-btn
+                  color="warning"
+                  icon="mdi-pencil"
+                  size="small"
+                  variant="text"
+                  @click="openEditCategory(item)"
+                />
                 <v-btn
                   color="error"
                   icon="mdi-delete"
@@ -139,7 +151,6 @@
       :category-options="categoryOptions"
       :descricao="productForm.descricao"
       :errors="productFormErrors"
-      :estoque="productForm.estoque"
       :is-editing="Boolean(editingProductId)"
       :is-valid="isProductFormValid"
       :model-value="productDialog"
@@ -149,7 +160,6 @@
       @update:ativo="productForm.ativo = $event"
       @update:categoria-id="productForm.categoriaId = $event"
       @update:descricao="productForm.descricao = $event"
-      @update:estoque="productForm.estoque = $event"
       @update:model-value="$event ? productDialog = $event : closeProductDialog()"
       @update:nome="productForm.nome = $event"
       @update:preco="productForm.preco = $event"

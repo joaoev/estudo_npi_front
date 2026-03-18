@@ -49,18 +49,6 @@
             />
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field
-              :error-messages="errors.estoque"
-              label="Estoque"
-              min="0"
-              :model-value="estoque"
-              step="1"
-              type="number"
-              variant="outlined"
-              @update:model-value="onUpdateEstoque"
-            />
-          </v-col>
-          <v-col cols="12">
             <v-switch
               color="primary"
               label="Produto ativo"
@@ -93,7 +81,6 @@
     nome: string
     descricao: string
     preco: number
-    estoque: number
     categoriaId: number
     ativo: boolean
     categoryOptions: CategoryOption[]
@@ -102,7 +89,6 @@
       descricao: string[]
       categoriaId: string[]
       preco: string[]
-      estoque: string[]
     }
     isValid: boolean
   }>()
@@ -112,7 +98,6 @@
     'update:nome': [value: string]
     'update:descricao': [value: string]
     'update:preco': [value: number]
-    'update:estoque': [value: number]
     'update:categoriaId': [value: number]
     'update:ativo': [value: boolean]
     'save': []
@@ -132,10 +117,6 @@
 
   function onUpdatePreco (value: string | number | null) {
     emit('update:preco', Number(value ?? 0))
-  }
-
-  function onUpdateEstoque (value: string | number | null) {
-    emit('update:estoque', Number(value ?? 0))
   }
 
   function onUpdateCategoriaId (value: string | number | null) {

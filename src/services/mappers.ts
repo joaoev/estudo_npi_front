@@ -11,7 +11,6 @@ export type UiProduto = {
   nome: string
   descricao: string
   preco: number
-  estoque: number
   categoriaId: number
   ativo: boolean
   criadoEm: string
@@ -34,23 +33,16 @@ export function mapApiProdutoToUi (produto: ApiProduto): UiProduto {
     nome: produto.nome,
     descricao: produto.descricao,
     preco: produto.preco,
-    estoque: 0,
     categoriaId: produto.categorias?.[0]?.id ?? 0,
     ativo: true,
     criadoEm: new Date().toISOString().split('T')[0],
   }
 }
 
-/**
- * Converte lista de produtos do backend para UI
- */
 export function mapApiProdutosToUi (produtos: ApiProduto[]): UiProduto[] {
   return produtos.map(p => mapApiProdutoToUi(p))
 }
 
-/**
- * Converte lista de categorias para opções de select
- */
 export function mapCategoriasToOptions (categorias: ApiCategoria[]): CategoryOption[] {
   return categorias.map(cat => ({
     title: cat.nomeCategoria,

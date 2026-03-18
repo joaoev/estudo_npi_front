@@ -70,7 +70,6 @@ export function useCatalogPage () {
     nome: '',
     descricao: '',
     preco: 0,
-    estoque: 0,
     categoriaId: 0,
     ativo: true,
   })
@@ -90,7 +89,6 @@ export function useCatalogPage () {
     { title: 'Descricao', key: 'descricao' },
     { title: 'Categoria', key: 'categoriaId' },
     { title: 'Preco', key: 'preco' },
-    { title: 'Estoque', key: 'estoque' },
     { title: 'Status', key: 'ativo' },
     { title: 'Criado em', key: 'criadoEm' },
     { title: 'Acoes', key: 'acoes', sortable: false },
@@ -123,7 +121,6 @@ export function useCatalogPage () {
         item.descricao,
         categoryName,
         item.preco.toString(),
-        item.estoque.toString(),
         item.criadoEm,
       ].join(' ').toLowerCase().includes(search)
     })
@@ -144,9 +141,6 @@ export function useCatalogPage () {
       descricao: productForm.descricao.trim() ? [] : ['Descricao e obrigatoria'],
       categoriaId: productForm.categoriaId > 0 ? [] : ['Categoria e obrigatoria'],
       preco: productForm.preco >= 0 ? [] : ['Preco nao pode ser negativo'],
-      estoque: Number.isInteger(productForm.estoque) && productForm.estoque >= 0
-        ? []
-        : ['Estoque deve ser inteiro maior ou igual a zero'],
     }
   })
 
@@ -160,7 +154,6 @@ export function useCatalogPage () {
       && productFormErrors.value.descricao.length === 0
       && productFormErrors.value.categoriaId.length === 0
       && productFormErrors.value.preco.length === 0
-      && productFormErrors.value.estoque.length === 0
   })
 
   function getCategoryName (categoriaId: number) {
@@ -190,7 +183,6 @@ export function useCatalogPage () {
     productForm.nome = ''
     productForm.descricao = ''
     productForm.preco = 0
-    productForm.estoque = 0
     productForm.categoriaId = categoryOptions.value[0]?.value ?? 0
     productForm.ativo = true
   }
@@ -269,7 +261,6 @@ export function useCatalogPage () {
     productForm.nome = product.nome
     productForm.descricao = product.descricao
     productForm.preco = product.preco
-    productForm.estoque = product.estoque
     productForm.categoriaId = product.categoriaId
     productForm.ativo = product.ativo
     productDialog.value = true
@@ -289,7 +280,6 @@ export function useCatalogPage () {
       nome: productForm.nome.trim(),
       descricao: productForm.descricao.trim(),
       preco: Number(productForm.preco),
-      estoque: Number(productForm.estoque),
       categoriaId: Number(productForm.categoriaId),
       ativo: productForm.ativo,
     }
