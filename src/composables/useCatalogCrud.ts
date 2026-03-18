@@ -1,4 +1,10 @@
 import { computed, ref } from 'vue'
+import { categoriaService, produtoService } from '@/services/api'
+import {
+  mapApiProdutosToUi,
+  mapCategoriasToOptions,
+  mapUiProdutoToApi,
+} from '@/services/mappers'
 
 export type Category = {
   id: number
@@ -34,135 +40,156 @@ export type ProductPayload = {
   ativo: boolean
 }
 
-const categoriesState = ref<Category[]>([
-  {
-    id: 1,
-    nome: 'Eletronicos',
-    descricao: 'Dispositivos e acessorios eletronicos',
-    ativa: true,
-    criadaEm: '2026-03-10',
-  },
-  {
-    id: 2,
-    nome: 'Livros',
-    descricao: 'Livros fisicos e digitais',
-    ativa: true,
-    criadaEm: '2026-03-11',
-  },
-  {
-    id: 3,
-    nome: 'Casa e Cozinha',
-    descricao: 'Itens para uso domestico',
-    ativa: true,
-    criadaEm: '2026-03-12',
-  },
-])
-
-const productsState = ref<Product[]>([
-  {
-    id: 1,
-    nome: 'Fone Bluetooth',
-    descricao: 'Fone sem fio com cancelamento de ruido',
-    preco: 299.9,
-    estoque: 18,
-    categoriaId: 1,
-    ativo: true,
-    criadoEm: '2026-03-12',
-  },
-  {
-    id: 2,
-    nome: 'Panela Antiaderente',
-    descricao: 'Panela de 24cm com revestimento reforcado',
-    preco: 159,
-    estoque: 32,
-    categoriaId: 3,
-    ativo: true,
-    criadoEm: '2026-03-12',
-  },
-  {
-    id: 3,
-    nome: 'Livro Vue 3 na Pratica',
-    descricao: 'Guia de desenvolvimento front-end moderno',
-    preco: 89.5,
-    estoque: 40,
-    categoriaId: 2,
-    ativo: true,
-    criadoEm: '2026-03-13',
-  },
-])
-
-const nextCategoryId = ref(Math.max(...categoriesState.value.map(item => item.id), 0) + 1)
-const nextProductId = ref(Math.max(...productsState.value.map(item => item.id), 0) + 1)
+const categoriesState = ref<Category[]>([])
+const productsState = ref<Product[]>([])
+const categoriesOptionsState = ref<Array<{
+  title: string
+  value: number
+}>>([])
+const loadingState = ref(false)
+const errorState = ref<string | null>(null)
 
 export function useCatalogCrud () {
   const categories = computed(() => categoriesState.value)
   const products = computed(() => productsState.value)
+  const categoryOptions = computed(() => categoriesOptionsState.value)
+  const loading = computed(() => loadingState.value)
+  const error = computed(() => errorState.value)
 
-  function createCategory (payload: CategoryPayload) {
-    categoriesState.value.unshift({
-      id: nextCategoryId.value++,
-      ...payload,
-      criadaEm: new Date().toISOString().slice(0, 10),
-    })
+  async function loadCategorias () {
+    try {
+      loadingState.value = true
+      errorState.value = null
+      const apiCategorias = await categoriaService.listar()
+      categoriesState.value = apiCategorias.map(cat => ({
+        id: cat.id,
+        nome: cat.nomeCategoria,
+        descricao: '',
+        ativa: true,
+        criadaEm: new Date().toISOString().split('T')[0],
+      }))
+      categoriesOptionsState.value = mapCategoriasToOptions(apiCategorias)
+    } catch (error_) {
+      errorState.value = `Erro ao carregar categorias: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`
+      console.error(error_)
+    } finally {
+      loadingState.value = false
+    }
   }
 
-  function updateCategory (id: number, payload: CategoryPayload) {
-    const index = categoriesState.value.findIndex(item => item.id === id)
-
-    if (index === -1) {
-      return
-    }
-
-    categoriesState.value[index] = {
-      ...categoriesState.value[index],
-      ...payload,
+  async function loadProdutos () {
+    try {
+      loadingState.value = true
+      errorState.value = null
+      const apiProdutos = await produtoService.listar()
+      productsState.value = mapApiProdutosToUi(apiProdutos) as Product[]
+    } catch (error_) {
+      errorState.value = `Erro ao carregar produtos: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`
+      console.error(error_)
+    } finally {
+      loadingState.value = false
     }
   }
 
-  function deleteCategory (id: number) {
-    const hasProducts = productsState.value.some(item => item.categoriaId === id)
+  async function loadAll () {
+    await Promise.all([loadCategorias(), loadProdutos()])
+  }
 
-    if (hasProducts) {
+  async function createCategory (payload: CategoryPayload) {
+    try {
+      errorState.value = null
+      await categoriaService.criar({
+        nomeCategoria: payload.nome,
+      })
+      await loadCategorias()
+    } catch (error_) {
+      errorState.value = `Erro ao criar categoria: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`
+      console.error(error_)
+      throw error_
+    }
+  }
+
+  async function updateCategory (id: number, payload: CategoryPayload) {
+    try {
+      errorState.value = null
+      await categoriaService.atualizar(id, {
+        nomeCategoria: payload.nome,
+      })
+      await loadCategorias()
+    } catch (error_) {
+      errorState.value = `Erro ao atualizar categoria: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`
+      console.error(error_)
+      throw error_
+    }
+  }
+
+  async function deleteCategory (id: number) {
+    try {
+      errorState.value = null
+      await categoriaService.deletar(id)
+      await loadCategorias()
+      await loadProdutos()
+      return true
+    } catch (error_) {
+      errorState.value = `Erro ao deletar categoria: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`
+      console.error(error_)
       return false
     }
-
-    categoriesState.value = categoriesState.value.filter(item => item.id !== id)
-    return true
   }
 
-  function createProduct (payload: ProductPayload) {
-    productsState.value.unshift({
-      id: nextProductId.value++,
-      ...payload,
-      criadoEm: new Date().toISOString().slice(0, 10),
-    })
-  }
-
-  function updateProduct (id: number, payload: ProductPayload) {
-    const index = productsState.value.findIndex(item => item.id === id)
-
-    if (index === -1) {
-      return
-    }
-
-    productsState.value[index] = {
-      ...productsState.value[index],
-      ...payload,
+  async function createProduct (payload: ProductPayload) {
+    try {
+      errorState.value = null
+      const apiPayload = mapUiProdutoToApi(payload)
+      await produtoService.criar(apiPayload)
+      await loadProdutos()
+    } catch (error_) {
+      errorState.value = `Erro ao criar produto: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`
+      console.error(error_)
+      throw error_
     }
   }
 
-  function deleteProduct (id: number) {
-    productsState.value = productsState.value.filter(item => item.id !== id)
+  async function updateProduct (id: number, payload: ProductPayload) {
+    try {
+      errorState.value = null
+      const apiPayload = mapUiProdutoToApi(payload)
+      await produtoService.atualizar(id, apiPayload)
+      await loadProdutos()
+    } catch (error_) {
+      errorState.value = `Erro ao atualizar produto: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`
+      console.error(error_)
+      throw error_
+    }
+  }
+
+  async function deleteProduct (id: number) {
+    try {
+      errorState.value = null
+      await produtoService.deletar(id)
+      await loadProdutos()
+      return true
+    } catch (error_) {
+      errorState.value = `Erro ao deletar produto: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`
+      console.error(error_)
+      return false
+    }
   }
 
   return {
     categories,
-    products,
+    categoryOptions,
     createCategory,
-    updateCategory,
-    deleteCategory,
     createProduct,
-    updateProduct,
+    deleteCategory,
     deleteProduct,
+    error,
+    loading,
+    loadAll,
+    loadCategorias,
+    loadProdutos,
+    products,
+    updateCategory,
+    updateProduct,
   }
 }

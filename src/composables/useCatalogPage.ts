@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import {
   type Category,
   type CategoryPayload,
@@ -22,14 +22,20 @@ type SnackbarState = {
 export function useCatalogPage () {
   const {
     categories,
+    categoryOptions: apiCategoryOptions,
     products,
     createCategory,
-    updateCategory,
     deleteCategory,
-    createProduct,
-    updateProduct,
     deleteProduct,
+    loadAll,
+    updateCategory,
+    updateProduct,
+    createProduct,
   } = useCatalogCrud()
+
+  onMounted(() => {
+    loadAll()
+  })
 
   const tab = ref<'produtos' | 'categorias'>('produtos')
 
@@ -123,14 +129,7 @@ export function useCatalogPage () {
     })
   })
 
-  const categoryOptions = computed(() => {
-    return categories.value
-      .filter(item => item.ativa)
-      .map(item => ({
-        title: item.nome,
-        value: item.id,
-      }))
-  })
+  const categoryOptions = computed(() => apiCategoryOptions.value)
 
   const categoryFormErrors = computed(() => {
     return {
@@ -226,29 +225,36 @@ export function useCatalogPage () {
       ativa: categoryForm.ativa,
     }
 
-    if (editingCategoryId.value) {
-      updateCategory(editingCategoryId.value, payload)
-      notify('Categoria atualizada com sucesso')
-    } else {
-      createCategory(payload)
-      notify('Categoria criada com sucesso')
+    try {
+      if (editingCategoryId.value) {
+        updateCategory(editingCategoryId.value, payload)
+        notify('Categoria atualizada com sucesso')
+      } else {
+        createCategory(payload)
+        notify('Categoria criada com sucesso')
+      }
+      closeCategoryDialog()
+    } catch (error_) {
+      notify(`Erro ao salvar categoria: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`, 'error')
     }
-
-    closeCategoryDialog()
   }
 
   function openDeleteCategory (category: Category) {
     deleteDialog.open = true
     deleteDialog.message = `Deseja excluir a categoria "${category.nome}"?`
     deleteDialog.action = () => {
-      const removed = deleteCategory(category.id)
+      try {
+        const removed = deleteCategory(category.id)
 
-      if (!removed) {
-        notify('Nao e possivel excluir categoria com produtos vinculados', 'warning')
-        return
+        if (!removed) {
+          notify('Nao e possivel excluir categoria com produtos vinculados', 'warning')
+          return
+        }
+
+        notify('Categoria excluida com sucesso')
+      } catch (error_) {
+        notify(`Erro ao deletar categoria: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`, 'error')
       }
-
-      notify('Categoria excluida com sucesso')
     }
   }
 
@@ -288,23 +294,30 @@ export function useCatalogPage () {
       ativo: productForm.ativo,
     }
 
-    if (editingProductId.value) {
-      updateProduct(editingProductId.value, payload)
-      notify('Produto atualizado com sucesso')
-    } else {
-      createProduct(payload)
-      notify('Produto criado com sucesso')
+    try {
+      if (editingProductId.value) {
+        updateProduct(editingProductId.value, payload)
+        notify('Produto atualizado com sucesso')
+      } else {
+        createProduct(payload)
+        notify('Produto criado com sucesso')
+      }
+      closeProductDialog()
+    } catch (error_) {
+      notify(`Erro ao salvar produto: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`, 'error')
     }
-
-    closeProductDialog()
   }
 
   function openDeleteProduct (product: Product) {
     deleteDialog.open = true
     deleteDialog.message = `Deseja excluir o produto "${product.nome}"?`
     deleteDialog.action = () => {
-      deleteProduct(product.id)
-      notify('Produto excluido com sucesso')
+      try {
+        deleteProduct(product.id)
+        notify('Produto excluido com sucesso')
+      } catch (error_) {
+        notify(`Erro ao deletar produto: ${error_ instanceof Error ? error_.message : 'Desconhecido'}`, 'error')
+      }
     }
   }
 

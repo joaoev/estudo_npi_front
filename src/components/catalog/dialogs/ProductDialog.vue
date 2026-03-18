@@ -28,7 +28,7 @@
           <v-col cols="12">
             <v-textarea
               :error-messages="errors.descricao"
-              label="Descricao"
+              label="Descrição"
               :model-value="descricao"
               rows="3"
               variant="outlined"
@@ -38,7 +38,7 @@
           <v-col cols="12" md="6">
             <v-text-field
               :error-messages="errors.preco"
-              label="Preco"
+              label="Preço"
               min="0"
               :model-value="preco"
               prefix="R$"

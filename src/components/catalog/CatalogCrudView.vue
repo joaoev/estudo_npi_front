@@ -2,8 +2,8 @@
   <v-container class="py-6" fluid>
     <v-row align="center" class="mb-4" justify="space-between">
       <v-col cols="12" md="8">
-        <h1 class="text-h4 font-weight-bold">Catalogo de Produtos</h1>
-        <p class="text-medium-emphasis mt-1">CRUD com dados mockados usando Composition API</p>
+        <h1 class="text-h4 font-weight-bold">Gestão de Produtos</h1>
+        <p class="text-medium-emphasis mt-1">Integração com API REST - Produtos e Categorias</p>
       </v-col>
     </v-row>
 
@@ -16,7 +16,7 @@
       <v-window v-model="tab">
         <v-window-item value="produtos">
           <v-card-text>
-            <v-row align="center" class="mb-3">
+            <v-row align="center" class="mb-3 flex ">
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="productSearch"
@@ -29,7 +29,7 @@
                 />
               </v-col>
               <v-col class="d-flex justify-md-end" cols="12" md="6">
-                <v-btn color="primary" prepend-icon="mdi-plus" @click="openCreateProduct">
+                <v-btn color="" prepend-icon="mdi-plus" @click="openCreateProduct">
                   Novo produto
                 </v-btn>
               </v-col>
