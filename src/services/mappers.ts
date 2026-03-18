@@ -1,6 +1,5 @@
 import type { ApiCategoria, ApiProduto, CreateProdutoPayload } from './api'
 
-// Tipos da aplicação
 export type UiCategoria = {
   id: number
   nome: string
@@ -12,8 +11,6 @@ export type UiProduto = {
   descricao: string
   preco: number
   categoriaId: number
-  ativo: boolean
-  criadoEm: string
 }
 
 export type CategoryOption = {
@@ -21,12 +18,6 @@ export type CategoryOption = {
   value: number
 }
 
-// ============ Mapeadores API -> UI ============
-
-/**
- * Converte dados do backend para produto UI
- * A API retorna categorias como array, pegamos a primeira como categoriaId
- */
 export function mapApiProdutoToUi (produto: ApiProduto): UiProduto {
   return {
     id: produto.id,
@@ -34,8 +25,6 @@ export function mapApiProdutoToUi (produto: ApiProduto): UiProduto {
     descricao: produto.descricao,
     preco: produto.preco,
     categoriaId: produto.categorias?.[0]?.id ?? 0,
-    ativo: true,
-    criadoEm: new Date().toISOString().split('T')[0],
   }
 }
 
@@ -50,9 +39,6 @@ export function mapCategoriasToOptions (categorias: ApiCategoria[]): CategoryOpt
   }))
 }
 
-/**
- * Converte categoria do backend para UI
- */
 export function mapApiCategoriaToUi (cat: ApiCategoria) {
   return {
     id: cat.id,
@@ -60,11 +46,6 @@ export function mapApiCategoriaToUi (cat: ApiCategoria) {
   }
 }
 
-// ============ Mapeadores UI -> API ============
-
-/**
- * Converte produto UI para payload do backend
- */
 export function mapUiProdutoToApi (produto: Partial<UiProduto>): CreateProdutoPayload {
   return {
     nome: produto.nome ?? '',

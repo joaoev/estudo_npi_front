@@ -48,14 +48,6 @@
               @update:model-value="onUpdatePreco"
             />
           </v-col>
-          <v-col cols="12" md="6">
-            <v-switch
-              color="primary"
-              label="Produto ativo"
-              :model-value="ativo"
-              @update:model-value="onUpdateAtivo"
-            />
-          </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions>
@@ -82,7 +74,6 @@
     descricao: string
     preco: number
     categoriaId: number
-    ativo: boolean
     categoryOptions: CategoryOption[]
     errors: {
       nome: string[]
@@ -99,7 +90,6 @@
     'update:descricao': [value: string]
     'update:preco': [value: number]
     'update:categoriaId': [value: number]
-    'update:ativo': [value: boolean]
     'save': []
   }>()
 
@@ -121,9 +111,5 @@
 
   function onUpdateCategoriaId (value: string | number | null) {
     emit('update:categoriaId', Number(value ?? 0))
-  }
-
-  function onUpdateAtivo (value: boolean | null) {
-    emit('update:ativo', Boolean(value))
   }
 </script>

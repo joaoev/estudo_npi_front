@@ -49,12 +49,6 @@
                 {{ getCategoryName(item.categoriaId) }}
               </template>
 
-              <template #item.ativo="{ item }">
-                <v-chip :color="item.ativo ? 'success' : 'warning'" size="small" variant="flat">
-                  {{ item.ativo ? 'Ativo' : 'Inativo' }}
-                </v-chip>
-              </template>
-
               <template #item.acoes="{ item }">
                 <v-btn
                   color="warning"
@@ -102,11 +96,6 @@
               :items="filteredCategories"
               no-data-text="Nenhuma categoria encontrada"
             >
-              <template #item.ativa="{ item }">
-                <v-chip :color="item.ativa ? 'success' : 'warning'" size="small" variant="flat">
-                  {{ item.ativa ? 'Ativa' : 'Inativa' }}
-                </v-chip>
-              </template>
 
               <template #item.acoes="{ item }">
                 <v-btn
@@ -131,22 +120,17 @@
     </v-card>
 
     <CategoryDialog
-      :ativa="categoryForm.ativa"
-      :descricao="categoryForm.descricao"
       :errors="categoryFormErrors"
       :is-editing="Boolean(editingCategoryId)"
       :is-valid="isCategoryFormValid"
       :model-value="categoryDialog"
       :nome="categoryForm.nome"
       @save="saveCategory"
-      @update:ativa="categoryForm.ativa = $event"
-      @update:descricao="categoryForm.descricao = $event"
       @update:model-value="$event ? categoryDialog = $event : closeCategoryDialog()"
       @update:nome="categoryForm.nome = $event"
     />
 
     <ProductDialog
-      :ativo="productForm.ativo"
       :categoria-id="productForm.categoriaId"
       :category-options="categoryOptions"
       :descricao="productForm.descricao"
@@ -157,7 +141,6 @@
       :nome="productForm.nome"
       :preco="productForm.preco"
       @save="saveProduct"
-      @update:ativo="productForm.ativo = $event"
       @update:categoria-id="productForm.categoriaId = $event"
       @update:descricao="productForm.descricao = $event"
       @update:model-value="$event ? productDialog = $event : closeProductDialog()"

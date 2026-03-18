@@ -9,9 +9,6 @@ import {
 export type Category = {
   id: number
   nome: string
-  descricao: string
-  ativa: boolean
-  criadaEm: string
 }
 
 export type Product = {
@@ -20,14 +17,10 @@ export type Product = {
   descricao: string
   preco: number
   categoriaId: number
-  ativo: boolean
-  criadoEm: string
 }
 
 export type CategoryPayload = {
   nome: string
-  descricao: string
-  ativa: boolean
 }
 
 export type ProductPayload = {
@@ -35,7 +28,6 @@ export type ProductPayload = {
   descricao: string
   preco: number
   categoriaId: number
-  ativo: boolean
 }
 
 const categoriesState = ref<Category[]>([])
@@ -62,9 +54,6 @@ export function useCatalogCrud () {
       categoriesState.value = apiCategorias.map(cat => ({
         id: cat.id,
         nome: cat.nomeCategoria,
-        descricao: '',
-        ativa: true,
-        criadaEm: new Date().toISOString().split('T')[0],
       }))
       categoriesOptionsState.value = mapCategoriasToOptions(apiCategorias)
     } catch (error_) {

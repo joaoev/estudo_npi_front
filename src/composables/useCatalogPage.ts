@@ -62,8 +62,6 @@ export function useCatalogPage () {
 
   const categoryForm = reactive<CategoryPayload>({
     nome: '',
-    descricao: '',
-    ativa: true,
   })
 
   const productForm = reactive<ProductPayload>({
@@ -71,15 +69,11 @@ export function useCatalogPage () {
     descricao: '',
     preco: 0,
     categoriaId: 0,
-    ativo: true,
   })
 
   const categoryHeaders = [
     { title: 'ID', key: 'id' },
     { title: 'Nome', key: 'nome' },
-    { title: 'Descricao', key: 'descricao' },
-    { title: 'Status', key: 'ativa' },
-    { title: 'Criada em', key: 'criadaEm' },
     { title: 'Acoes', key: 'acoes', sortable: false },
   ]
 
@@ -89,8 +83,6 @@ export function useCatalogPage () {
     { title: 'Descricao', key: 'descricao' },
     { title: 'Categoria', key: 'categoriaId' },
     { title: 'Preco', key: 'preco' },
-    { title: 'Status', key: 'ativo' },
-    { title: 'Criado em', key: 'criadoEm' },
     { title: 'Acoes', key: 'acoes', sortable: false },
   ]
 
@@ -102,7 +94,7 @@ export function useCatalogPage () {
     }
 
     return categories.value.filter(item => {
-      return [item.nome, item.descricao, item.criadaEm].join(' ').toLowerCase().includes(search)
+      return item.nome.toLowerCase().includes(search)
     })
   })
 
@@ -121,7 +113,6 @@ export function useCatalogPage () {
         item.descricao,
         categoryName,
         item.preco.toString(),
-        item.criadoEm,
       ].join(' ').toLowerCase().includes(search)
     })
   })
@@ -131,7 +122,6 @@ export function useCatalogPage () {
   const categoryFormErrors = computed(() => {
     return {
       nome: categoryForm.nome.trim() ? [] : ['Nome e obrigatorio'],
-      descricao: categoryForm.descricao.trim() ? [] : ['Descricao e obrigatoria'],
     }
   })
 
@@ -146,7 +136,6 @@ export function useCatalogPage () {
 
   const isCategoryFormValid = computed(() => {
     return categoryFormErrors.value.nome.length === 0
-      && categoryFormErrors.value.descricao.length === 0
   })
 
   const isProductFormValid = computed(() => {
@@ -175,8 +164,6 @@ export function useCatalogPage () {
 
   function resetCategoryForm () {
     categoryForm.nome = ''
-    categoryForm.descricao = ''
-    categoryForm.ativa = true
   }
 
   function resetProductForm () {
@@ -184,7 +171,6 @@ export function useCatalogPage () {
     productForm.descricao = ''
     productForm.preco = 0
     productForm.categoriaId = categoryOptions.value[0]?.value ?? 0
-    productForm.ativo = true
   }
 
   function openCreateCategory () {
@@ -196,8 +182,6 @@ export function useCatalogPage () {
   function openEditCategory (category: Category) {
     editingCategoryId.value = category.id
     categoryForm.nome = category.nome
-    categoryForm.descricao = category.descricao
-    categoryForm.ativa = category.ativa
     categoryDialog.value = true
   }
 
@@ -213,8 +197,6 @@ export function useCatalogPage () {
 
     const payload = {
       nome: categoryForm.nome.trim(),
-      descricao: categoryForm.descricao.trim(),
-      ativa: categoryForm.ativa,
     }
 
     try {
@@ -262,7 +244,6 @@ export function useCatalogPage () {
     productForm.descricao = product.descricao
     productForm.preco = product.preco
     productForm.categoriaId = product.categoriaId
-    productForm.ativo = product.ativo
     productDialog.value = true
   }
 
@@ -281,7 +262,6 @@ export function useCatalogPage () {
       descricao: productForm.descricao.trim(),
       preco: Number(productForm.preco),
       categoriaId: Number(productForm.categoriaId),
-      ativo: productForm.ativo,
     }
 
     try {
